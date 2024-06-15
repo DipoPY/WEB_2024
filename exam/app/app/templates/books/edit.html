@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-{% from "books/form.html" import book_form %}
-
-{% block content %}
-<div class="container mt-4">
-    <h1>Редактировать книгу</h1>
-    {{ book_form(genres, url_for('edit_book', book_id=book.id), current_user, new_genres, book) }}
-</div>
-{% endblock %}
