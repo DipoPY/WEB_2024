@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{% if book.image_id %}{{ url_for('image', image_id=book.image_id) }}{% endif %}" class="img-fluid" alt="Обложка книги">
+        </div>
+        <div class="col-md-8">
+            <h2>{{ book.name }}</h2>
+            <p><strong>Издательство:</strong> {{ book.pub_house }}</p>
+            <p><strong>Автор:</strong> {{ book.author }}</p>
+            <p><strong>Описание:</strong> <span>{{ book.short_desc | safe }}</span></p>
+            <p><strong>Год написания:</strong> {{ book.year }}</p>
+            <p><strong>Объём (в страницах):</strong> {{ book.volume }}</p>
+            <p><strong>Жанр(ы):</strong>
+                <ul>
+                    {% for genre in genres %}
+                    <li>{{ genre.name }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+            <p><strong>Рейтинг:</strong> {{ book.rating }}</p>
+        </div>
+    </div>
+    {% if current_user.is_authenticated and not comment %}
+    <a class="btn btn-primary mt-4" href="{{ url_for('comments.comment_post', book_id=book.id) }}">Написать рецензию</a>
+    {% endif %}
+    <div class="mt-4">
+        <h4>Рецензии:</h4>
+        {% if not all_comments and not comment %}
+        <p>Рецензий пока нет</p>
+        {% endif %}
+        {% if current_user.is_authenticated and comment %}
+        <div class="border p-3 mb-3">
+            <h5>Ваша рецензия <span class="badge badge-primary">{{ comment.mark }}</span></h5>
+            <p>{{ comment.text | safe }}</p>
+        </div>
+        {% endif %}
+        {% for com in all_comments %}
+        <div class="border p-3 mb-3">
+            <h5>{{ com.get_user() }} <span class="badge badge-primary">{{ com.mark }}</span></h5>
+            <p>{{ com.text | safe }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
